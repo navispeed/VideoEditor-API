@@ -1,0 +1,24 @@
+{
+  "properties": [
+    {
+      "name": "service.download.rate",
+      "type": "java.lang.Long",
+      "description": "Delay between 2 check for download task in BDD."
+    },
+    {
+      "name": "service.download.initialDelay",
+      "type": "java.lang.Long",
+      "description": "Delay before first check when application start."
+    },
+    {
+      "name": "service.storage.expiration",
+      "type": "java.lang.Integer",
+      "description": "Storage expiration for output file in hour."
+    },
+    {
+      "name": "service.storage.cron",
+      "type": "java.lang.String",
+      "description": "Cron for expiration check."
+    }
+  ]
+}
