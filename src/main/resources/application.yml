@@ -4,9 +4,9 @@ spring:
       repositories:
         enabled: true
   datasource:
-    username: greg
-    password:
-    url: jdbc:postgresql://localhost:5432/youtube-extractor
+    username: ${JDBC_USERNAME:user}
+    password: ${JDBC_PASSWORD:password}
+    url: ${JDBC_URL:jdbc:postgresql://localhost:5432/youtube-extractor}
   jpa:
     properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
