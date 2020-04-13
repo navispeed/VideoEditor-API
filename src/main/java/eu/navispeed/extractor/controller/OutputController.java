@@ -60,15 +60,14 @@ public class OutputController {
   @SneakyThrows
   private ResourceRegion resourceRegion(UrlResource video, HttpHeaders headers) {
     val contentLength = video.contentLength();
-    val range = headers.getRange().get(0);
-    if (range != null) {
+    return headers.getRange().stream().findFirst().map(range -> {
       val start = range.getRangeStart(contentLength);
       val end = range.getRangeEnd(contentLength);
       val rangeLength = min(1024 * 1024, end - start + 1);
       return new ResourceRegion(video, 0, rangeLength);
-    } else {
+    }).orElseGet(() -> {
       val rangeLength = min(1024 * 1024, contentLength);
       return new ResourceRegion(video, 0, rangeLength);
-    }
+    });
   }
 }
