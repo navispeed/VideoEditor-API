@@ -4,7 +4,7 @@ import com.github.kiulian.downloader.OnYoutubeDownloadListener;
 import com.github.kiulian.downloader.YoutubeDownloader;
 import com.github.kiulian.downloader.YoutubeException;
 import com.github.kiulian.downloader.model.YoutubeVideo;
-import com.github.kiulian.downloader.model.formats.VideoFormat;
+import com.github.kiulian.downloader.model.formats.AudioVideoFormat;
 import com.google.gson.Gson;
 import eu.navispeed.extractor.model.Output;
 import eu.navispeed.extractor.model.Source;
@@ -66,14 +66,15 @@ public class YoutubeProvider implements VideoProvider {
       return;
     }
     LOGGER.info("Starting download for {}", task.getProject().getUrl());
-    List<VideoFormat> videoFormats = video.videoFormats();
+    List<AudioVideoFormat> videoFormats = video.videoWithAudioFormats();
+    AudioVideoFormat format = videoFormats.get(0);
     try {
-      video.downloadAsync(videoFormats.get(0), new File(dest),
+      video.downloadAsync(format, new File(dest),
           new OnYoutubeDownloadListener() {
             @Override public void onDownloading(int i) {
               LOGGER.debug("Download progress for {} : {}", task.getProject().getUrl(), i);
               taskRepository.save(task.toBuilder()
-                  .state(Task.State.DONE_WITH_ERROR)
+                  .state(Task.State.RUNNING)
                   .progress(i)
                   .build());
 
@@ -84,6 +85,7 @@ public class YoutubeProvider implements VideoProvider {
               Output output = Output.builder()
                   .creationDate(LocalDateTime.now())
                   .path(dest).build();
+              new File(dest).listFiles()[0].renameTo(new File(dest + "/output.mp4"));
               outputRepository.save(output);
               taskRepository.save(task.toBuilder().state(Task.State.DONE).output(output).build());
             }

@@ -8,7 +8,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -31,8 +30,7 @@ public class DownloadService extends TaskService {
       initialDelayString = "${service.download.initialDelay}")
   @Transactional
   public void checkTodoTask() {
-    List<Task> todoTask = this.findTODOTask();
-    for (Task task : todoTask) {
+    findTODOTask().ifPresent(task -> {
       videoProviders.stream()
           .filter(p -> task.getProject().getUrl().getUrl().contains(p.getUrlPattern()))
           .findFirst().ifPresentOrElse(p -> p.download(task), () -> {
@@ -40,6 +38,6 @@ public class DownloadService extends TaskService {
             .message("No provider was found for this video").build());
         LOGGER.error("No provider was found for task {}", task);
       });
-    }
+    });
   }
 }

@@ -15,8 +15,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import java.util.UUID;
 
 @Entity
@@ -51,11 +49,13 @@ public class Task {
   @ToString.Exclude
   @JsonBackReference
   private Project project;
-  private String args;
   @Enumerated(value = EnumType.STRING)
   private Type type;
   private String message;
   private Integer progress;
   @OneToOne(cascade = CascadeType.ALL)
   private ExtractionParameter extractionParameter;
+  @OneToOne(cascade = CascadeType.ALL)
+  private DownloadParameter downloadParameter;
+
 }

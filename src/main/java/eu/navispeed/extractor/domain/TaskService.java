@@ -1,11 +1,10 @@
 package eu.navispeed.extractor.domain;
 
-import com.google.common.base.Joiner;
 import eu.navispeed.extractor.model.Task;
 import eu.navispeed.extractor.repository.TaskRepository;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 class TaskService {
@@ -18,11 +17,11 @@ class TaskService {
     this.taskRepository = taskRepository;
   }
 
-  List<Task> findTODOTask() {
+  Optional<Task> findTODOTask() {
     LOGGER.info("Looking for TODO tasks of type {}", type.name());
-    List<Task> todoTask =
-        taskRepository.findAllByStateEqualsAndTypeEquals(Task.State.TODO, type);
-    LOGGER.info("Found following task to do: {}", Joiner.on(",").join(todoTask));
+    Optional<Task> todoTask =
+        taskRepository.findFirstByStateEqualsAndTypeEquals(Task.State.TODO, type);
+    todoTask.ifPresent(t -> LOGGER.info("Found following task to do: {}", t));
     return todoTask;
   }
 

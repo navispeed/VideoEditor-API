@@ -4,6 +4,7 @@ import eu.navispeed.extractor.model.ExtractionParameter;
 import eu.navispeed.extractor.model.ExtractionParameter.Format;
 import eu.navispeed.extractor.model.Output;
 import eu.navispeed.extractor.model.Task;
+import eu.navispeed.extractor.repository.OutputRepository;
 import eu.navispeed.extractor.repository.TaskRepository;
 import lombok.extern.slf4j.Slf4j;
 import net.bramp.ffmpeg.FFmpeg;
@@ -14,35 +15,37 @@ import net.bramp.ffmpeg.builder.FFmpegOutputBuilder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
 public class ExtractionService extends TaskService {
   private final TaskRepository taskRepository;
+  private final OutputRepository outputRepository;
   private final FFmpegExecutor fFmpegExecutor;
   private final FFmpeg fFmpeg;
   private final FFprobe fFprobe;
 
 
   public ExtractionService(TaskRepository taskRepository, FFmpegExecutor fFmpegExecutor,
-      FFmpeg fFmpeg, FFprobe fFprobe) {
+      FFmpeg fFmpeg, FFprobe fFprobe, OutputRepository outputRepository) {
     super(Task.Type.EXTRACTION, taskRepository);
     this.taskRepository = taskRepository;
     this.fFmpegExecutor = fFmpegExecutor;
     this.fFmpeg = fFmpeg;
     this.fFprobe = fFprobe;
+    this.outputRepository = outputRepository;
   }
 
   @Scheduled(fixedRateString = "${service.extraction.rate}",
       initialDelayString = "${service.extraction.initialDelay}")
+  @Transactional
   public void checkTodoTask() {
-    List<Task> todoTask = this.findTODOTask();
-    todoTask.forEach(this::processTask);
+    this.findTODOTask().ifPresent(this::processTask);
   }
 
   private void processTask(Task task) {
@@ -71,8 +74,8 @@ public class ExtractionService extends TaskService {
     String path =
         "/tmp/" + task.getProject().getUuid() + "-" + task.getId() + "-converted." + (
             extractionParameter.getFormat() == Format.VIDEO ?
-                "VIDEO" :
-                "AUDIO");
+                "mp4" :
+                "mp3");
     String inputFilePath = new File(output.getPath()).listFiles()[0].getAbsolutePath();
     FFmpegOutputBuilder fFmpegOutputBuilder = fFmpeg.builder()
         .setInput(inputFilePath)
@@ -87,15 +90,16 @@ public class ExtractionService extends TaskService {
     switch (extractionParameter.getFormat()) {
       case VIDEO:
         builder = fFmpegOutputBuilder
+            .setFormat("mp4")
             .setVideoCodec("libx264")     // Video using x264
-            .setAudioCodec("aac")
+            .setAudioCodec("libmp3lame")
             .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL) // Allow FFmpeg to use experimental specs
             .done();
         break;
       case AUDIO:
         fFmpegOutputBuilder.video_enabled = false;
         builder = fFmpegOutputBuilder
-            .setAudioCodec("aac")
+            .setAudioCodec("libmp3lame")
             .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL) // Allow FFmpeg to use experimental specs
             .done();
         break;
@@ -126,7 +130,10 @@ public class ExtractionService extends TaskService {
     } catch (RuntimeException e) {
       onError(task, e.getMessage());
     }
-    Output.builder().project(task.getProject()).creationDate(LocalDateTime.now()).path(path);
+    LOGGER.info("Finish conversion of {}", task);
+    onChange(task, "", Task.State.DONE);
+    outputRepository.save(
+        Output.builder().project(task.getProject()).creationDate(LocalDateTime.now()).path(path).build());
   }
 
 }
