@@ -1,15 +1,18 @@
-package eu.navispeed.extractor.extractor.domain;
+package eu.navispeed.extractor.domain;
 
-import eu.navispeed.extractor.extractor.domain.provider.VideoProvider;
-import eu.navispeed.extractor.extractor.model.Project;
-import eu.navispeed.extractor.extractor.model.Source;
-import eu.navispeed.extractor.extractor.model.Task;
-import eu.navispeed.extractor.extractor.repository.ProjectRepository;
-import eu.navispeed.extractor.extractor.repository.SourceRepository;
-import eu.navispeed.extractor.extractor.repository.TaskRepository;
+import eu.navispeed.extractor.domain.provider.VideoProvider;
+import eu.navispeed.extractor.model.ExtractionParameter;
+import eu.navispeed.extractor.model.Project;
+import eu.navispeed.extractor.model.Source;
+import eu.navispeed.extractor.model.Task;
+import eu.navispeed.extractor.repository.ExtractionParameterRepository;
+import eu.navispeed.extractor.repository.ProjectRepository;
+import eu.navispeed.extractor.repository.SourceRepository;
+import eu.navispeed.extractor.repository.TaskRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -35,6 +38,10 @@ public class ProjectService {
     return projectRepository.findAll();
   }
 
+  public Optional<Project> get(UUID uuid) {
+    return projectRepository.findById(uuid);
+  }
+
   public Optional<Project> create(String url) {
     return generateInfo(Source.builder().url(url).build()).map(source -> {
       sourceRepository.save(source);
@@ -46,6 +53,23 @@ public class ProjectService {
     return projectRepository.findById(id).map(p -> taskRepository.save(
         Task.builder().project(p).state(Task.State.TODO).type(Task.Type.DOWNLOAD)
             .args(String.valueOf(quality)).build()));
+  }
+
+  public Optional<Task> extract(UUID id, UUID input, ExtractionParameter parameter) {
+    return projectRepository.findById(id)
+        .flatMap(p -> taskRepository.findById(input).map(task -> Map.entry(p, task)))
+        .map(p -> {
+          ExtractionParameter build = parameter.toBuilder()
+              .fromTimeCode(parameter.getFromTimeCode())
+              .toTimeCode(parameter.getToTimeCode())
+              .extractionTask(p.getValue())
+              .build();
+//          extractionParameterRepository.save(build);
+          return taskRepository.save(Task.builder().project(p.getKey())
+              .state(Task.State.TODO).type(Task.Type.EXTRACTION)
+              .extractionParameter(build)
+              .build());
+        });
   }
 
   private Optional<Source> generateInfo(Source source) {

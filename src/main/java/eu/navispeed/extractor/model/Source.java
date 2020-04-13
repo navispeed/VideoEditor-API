@@ -1,4 +1,4 @@
-package eu.navispeed.extractor.extractor.model;
+package eu.navispeed.extractor.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;

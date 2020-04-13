@@ -1,4 +1,4 @@
-package eu.navispeed.extractor.extractor;
+package eu.navispeed.extractor;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

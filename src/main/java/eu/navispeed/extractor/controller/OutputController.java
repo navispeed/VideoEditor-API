@@ -1,17 +1,12 @@
-package eu.navispeed.extractor.extractor.controller;
+package eu.navispeed.extractor.controller;
 
 import static org.springframework.web.servlet.function.RouterFunctions.route;
 import static org.springframework.web.servlet.function.ServerResponse.ok;
 
-import eu.navispeed.extractor.extractor.domain.ProjectService;
-import lombok.Data;
-import org.springframework.http.MediaType;
+import eu.navispeed.extractor.domain.ProjectService;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.function.RequestPredicates;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.ServerResponse;
-
-import java.util.UUID;
 
 @Component
 public class OutputController {

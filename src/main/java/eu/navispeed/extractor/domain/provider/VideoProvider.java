@@ -1,7 +1,7 @@
-package eu.navispeed.extractor.extractor.domain.provider;
+package eu.navispeed.extractor.domain.provider;
 
-import eu.navispeed.extractor.extractor.model.Source;
-import eu.navispeed.extractor.extractor.model.Task;
+import eu.navispeed.extractor.model.Source;
+import eu.navispeed.extractor.model.Task;
 
 import java.util.Optional;
 

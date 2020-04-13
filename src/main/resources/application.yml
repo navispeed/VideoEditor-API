@@ -16,7 +16,14 @@ spring:
 service:
   download:
     rate: 60000
-    initialDelay: 10000
+    initialDelay: 5000
   storage:
-    expiration: 0
+    expiration: 12
     cron: 0 * * * * ?
+  extraction:
+    rate: 60000
+    initialDelay: 5000
+    ffmpeg:
+      location: /usr/local/bin/ffmpeg
+    ffprobe:
+      location: /usr/local/bin/ffprobe

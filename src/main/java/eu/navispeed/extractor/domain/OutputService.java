@@ -1,7 +1,7 @@
-package eu.navispeed.extractor.extractor.domain;
+package eu.navispeed.extractor.domain;
 
-import eu.navispeed.extractor.extractor.model.Output;
-import eu.navispeed.extractor.extractor.repository.OutputRepository;
+import eu.navispeed.extractor.model.Output;
+import eu.navispeed.extractor.repository.OutputRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

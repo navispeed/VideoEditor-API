@@ -1,7 +1,6 @@
-package eu.navispeed.extractor.extractor.repository;
+package eu.navispeed.extractor.repository;
 
-import eu.navispeed.extractor.extractor.model.Output;
-import eu.navispeed.extractor.extractor.model.Source;
+import eu.navispeed.extractor.model.Output;
 import org.springframework.data.repository.CrudRepository;
 
 import java.time.LocalDateTime;

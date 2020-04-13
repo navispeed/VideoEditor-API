@@ -1,4 +1,4 @@
-package eu.navispeed.extractor.extractor.model;
+package eu.navispeed.extractor.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
@@ -7,11 +7,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.util.UUID;
 
 @Entity
@@ -24,8 +29,9 @@ public class Task {
 
   public enum Type {
     DOWNLOAD,
-    CONVERT,
+    EXTRACTION,
   }
+
 
   public enum State {
     TODO,
@@ -34,6 +40,7 @@ public class Task {
     DONE_WITH_ERROR
   }
 
+
   @Id
   @GeneratedValue
   private UUID id;
@@ -41,10 +48,14 @@ public class Task {
   @OneToOne
   private Output output;
   @ManyToOne
+  @ToString.Exclude
   @JsonBackReference
   private Project project;
   private String args;
+  @Enumerated(value = EnumType.STRING)
   private Type type;
   private String message;
   private Integer progress;
+  @OneToOne(cascade = CascadeType.ALL)
+  private ExtractionParameter extractionParameter;
 }

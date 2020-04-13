@@ -19,6 +19,26 @@
       "name": "service.storage.cron",
       "type": "java.lang.String",
       "description": "Cron for expiration check."
+    },
+    {
+      "name": "service.extraction.ffmpeg.location",
+      "type": "java.lang.String",
+      "description": "Location of ffmpeg binary."
+    },
+    {
+      "name": "service.extraction.rate",
+      "type": "java.lang.Long",
+      "description": "Delay between 2 check for extraction task in BDD."
+    },
+    {
+      "name": "service.extraction.initialDelay",
+      "type": "java.lang.Long",
+      "description": "Delay before first check when application start."
+    },
+    {
+      "name": "service.extraction.ffprobe.location",
+      "type": "java.lang.String",
+      "description": "Location of ffprobe binary."
     }
   ]
 }

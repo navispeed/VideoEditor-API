@@ -1,4 +1,4 @@
-package eu.navispeed.extractor.extractor.domain.provider;
+package eu.navispeed.extractor.domain.provider;
 
 import com.github.kiulian.downloader.OnYoutubeDownloadListener;
 import com.github.kiulian.downloader.YoutubeDownloader;
@@ -6,11 +6,11 @@ import com.github.kiulian.downloader.YoutubeException;
 import com.github.kiulian.downloader.model.YoutubeVideo;
 import com.github.kiulian.downloader.model.formats.VideoFormat;
 import com.google.gson.Gson;
-import eu.navispeed.extractor.extractor.model.Output;
-import eu.navispeed.extractor.extractor.model.Source;
-import eu.navispeed.extractor.extractor.model.Task;
-import eu.navispeed.extractor.extractor.repository.OutputRepository;
-import eu.navispeed.extractor.extractor.repository.TaskRepository;
+import eu.navispeed.extractor.model.Output;
+import eu.navispeed.extractor.model.Source;
+import eu.navispeed.extractor.model.Task;
+import eu.navispeed.extractor.repository.OutputRepository;
+import eu.navispeed.extractor.repository.TaskRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -36,11 +36,13 @@ public class YoutubeProvider implements VideoProvider {
     this.outputRepository = outputRepository;
   }
 
-  @Override public String getName() {
+  @Override
+  public String getName() {
     return "Youtube";
   }
 
-  @Override public Optional<Source> addVideoInfo(Source source) {
+  @Override
+  public Optional<Source> addVideoInfo(Source source) {
     YoutubeVideo video;
     try {
       video = youtubeDownloader.getVideo(source.getUrl().split("=")[1]);
@@ -52,15 +54,9 @@ public class YoutubeProvider implements VideoProvider {
         .title(video.details().title()).build());
   }
 
-  @Override public void download(Task task) {
-    final boolean anotherAlreadyExist =
-        taskRepository.findAllByProjectEqualsAndStateIsNotAndTypeEquals(task.getProject(),
-            Task.State.TODO, Task.Type.DOWNLOAD).isEmpty();
-    if (anotherAlreadyExist) {
-      onError(task, "Another task with the same url is already scheduled");
-      return;
-    }
-    String dest = "/tmp/" + task.getId() + ".mp4";
+  @Override
+  public void download(Task task) {
+    String dest = "/tmp/" + task.getId();
     YoutubeVideo video;
     String url = task.getProject().getUrl().getUrl();
     try {
@@ -85,7 +81,9 @@ public class YoutubeProvider implements VideoProvider {
 
             @Override public void onFinished(File file) {
               LOGGER.info("Download finish for {}", task.getProject().getUrl());
-              Output output = Output.builder().creationDate(LocalDateTime.now()).path(dest).build();
+              Output output = Output.builder()
+                  .creationDate(LocalDateTime.now())
+                  .path(dest).build();
               outputRepository.save(output);
               taskRepository.save(task.toBuilder().state(Task.State.DONE).output(output).build());
             }
@@ -110,7 +108,8 @@ public class YoutubeProvider implements VideoProvider {
   }
 
 
-  @Override public String getUrlPattern() {
+  @Override
+  public String getUrlPattern() {
     return ".youtube.";
   }
 }

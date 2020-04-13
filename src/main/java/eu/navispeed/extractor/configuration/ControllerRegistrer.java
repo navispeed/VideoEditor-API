@@ -1,11 +1,10 @@
-package eu.navispeed.extractor.extractor.configuration;
+package eu.navispeed.extractor.configuration;
 
 import static org.springframework.web.servlet.function.RouterFunctions.route;
 import static org.springframework.web.servlet.function.ServerResponse.notFound;
 import static org.springframework.web.servlet.function.ServerResponse.status;
 
-import eu.navispeed.extractor.extractor.controller.ProjectController;
-import eu.navispeed.extractor.extractor.domain.ProjectService;
+import eu.navispeed.extractor.controller.ProjectController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

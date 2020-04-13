@@ -1,4 +1,4 @@
-package eu.navispeed.extractor.extractor.domain;
+package eu.navispeed.extractor.domain;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package eu.navispeed.extractor.extractor.controller;
+package eu.navispeed.extractor.controller;
 
 import org.springframework.stereotype.Component;
 
