@@ -84,6 +84,7 @@ public class YoutubeProvider implements VideoProvider {
               LOGGER.info("Download finish for {}", task.getProject().getUrl());
               Output output = Output.builder()
                   .creationDate(LocalDateTime.now())
+                  .project(task.getProject())
                   .path(dest).build();
               new File(dest).listFiles()[0].renameTo(new File(dest + "/output.mp4"));
               outputRepository.save(output);

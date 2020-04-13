@@ -18,7 +18,7 @@ class TaskService {
   }
 
   Optional<Task> findTODOTask() {
-    LOGGER.info("Looking for TODO tasks of type {}", type.name());
+    LOGGER.debug("Looking for TODO tasks of type {}", type.name());
     Optional<Task> todoTask =
         taskRepository.findFirstByStateEqualsAndTypeEquals(Task.State.TODO, type);
     todoTask.ifPresent(t -> LOGGER.info("Found following task to do: {}", t));
