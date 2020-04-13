@@ -4,12 +4,17 @@ import eu.navispeed.extractor.model.Output;
 import eu.navispeed.extractor.repository.OutputRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.io.File;
+import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -22,6 +27,25 @@ public class OutputService {
 
   public OutputService(OutputRepository outputRepository) {
     this.outputRepository = outputRepository;
+  }
+
+  public Optional<Output> get(Integer id) {
+    return outputRepository.findById(id);
+  }
+
+  @Transactional
+  public List<Output> list(UUID projectId) {
+    return outputRepository.findAllByProject_UuidEquals(projectId);
+  }
+
+  public Optional<UrlResource> getUrlFor(Integer id) {
+    return outputRepository.findById(id).flatMap(o -> {
+      try {
+        return Optional.of(new UrlResource("file://" + o.getPath()));
+      } catch (MalformedURLException e) {
+        return Optional.empty();
+      }
+    });
   }
 
   void deleteAllExpiredOutput() {

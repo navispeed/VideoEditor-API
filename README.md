@@ -12,3 +12,9 @@ Then, run the app using:
 ```bash
 mvn spring-boot:run
 ```
+
+## Features
+
+- Download video from youtube
+- Extract some part of video and export it as mp3/mp4
+- Stream exported files
