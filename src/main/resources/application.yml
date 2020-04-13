@@ -27,3 +27,6 @@ service:
       location: /usr/local/bin/ffmpeg
     ffprobe:
       location: /usr/local/bin/ffprobe
+  output:
+    stream:
+      buffer: "2048"

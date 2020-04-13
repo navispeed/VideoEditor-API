@@ -39,6 +39,11 @@
       "name": "service.extraction.ffprobe.location",
       "type": "java.lang.String",
       "description": "Location of ffprobe binary."
+    },
+    {
+      "name": "service.output.stream.buffer",
+      "type": "java.lang.String",
+      "description": "Video buffer size (in MO)."
     }
   ]
 }

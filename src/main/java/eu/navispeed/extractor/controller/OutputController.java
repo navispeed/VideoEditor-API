@@ -7,6 +7,7 @@ import static org.springframework.web.servlet.function.ServerResponse.ok;
 import eu.navispeed.extractor.domain.OutputService;
 import lombok.SneakyThrows;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.HttpHeaders;
@@ -24,10 +25,13 @@ import java.util.UUID;
 @Component
 public class OutputController {
   private final OutputService service;
+  private final long bufferSize;
 
 
-  public OutputController(OutputService projectService) {
+  public OutputController(OutputService projectService,
+      @Value("${service.output.stream.buffer}") String bufferSize) {
     this.service = projectService;
+    this.bufferSize = Long.parseLong(bufferSize) * 1024 * 1024;
   }
 
   public RouterFunction<ServerResponse> list() {
@@ -63,10 +67,10 @@ public class OutputController {
     return headers.getRange().stream().findFirst().map(range -> {
       val start = range.getRangeStart(contentLength);
       val end = range.getRangeEnd(contentLength);
-      val rangeLength = min(1024 * 1024, end - start + 1);
+      val rangeLength = min(bufferSize, end - start + 1);
       return new ResourceRegion(video, 0, rangeLength);
     }).orElseGet(() -> {
-      val rangeLength = min(1024 * 1024, contentLength);
+      val rangeLength = min(bufferSize, contentLength);
       return new ResourceRegion(video, 0, rangeLength);
     });
   }
