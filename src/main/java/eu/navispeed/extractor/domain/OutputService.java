@@ -57,8 +57,9 @@ public class OutputService {
     LOGGER.info("To remove: {}", Arrays.toString(allExpired.toArray(new Output[0])));
     allExpired.forEach(output -> {
       File folder = new File(output.getPath());
-      if (folder != null) {
-        for (File file : folder.listFiles()) {
+      File[] files = folder.listFiles();
+      if (files != null) {
+        for (File file : files) {
           file.delete();
         }
         folder.delete();

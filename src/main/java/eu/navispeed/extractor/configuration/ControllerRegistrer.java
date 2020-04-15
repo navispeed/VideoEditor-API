@@ -26,7 +26,7 @@ public class ControllerRegistrer {
           LOGGER.info("Found a route which matches " + req.uri().getPath());
           return req;
         }).after((req, res) -> {
-          if (res.statusCode() == HttpStatus.OK) {
+          if (res.statusCode().value() / 100 == 2) {
             LOGGER.info("Finished processing request " + req.uri().getPath());
           } else {
             LOGGER.info("There was an error while processing request" + req.uri());

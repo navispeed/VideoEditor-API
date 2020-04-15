@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,6 +37,6 @@ public class Project {
   @ToString.Exclude
   private List<Task> tasks;
 
-  @Transient
+  @OneToMany(fetch = FetchType.EAGER)
   private List<Output> exports;
 }
