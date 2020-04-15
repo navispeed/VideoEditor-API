@@ -1,5 +1,6 @@
 package eu.navispeed.extractor.controller;
 
+import static java.lang.Math.min;
 import static org.springframework.web.servlet.function.RouterFunctions.route;
 import static org.springframework.web.servlet.function.ServerResponse.ok;
 
@@ -32,7 +33,7 @@ public class OutputController {
   public OutputController(OutputService projectService,
       @Value("${service.output.stream.buffer}") String bufferSize) {
     this.service = projectService;
-    this.bufferSize = Long.parseLong(bufferSize) * 1024 * 1024;
+    this.bufferSize = Long.parseLong(bufferSize) * 1024;
   }
 
   public RouterFunction<ServerResponse> list() {
@@ -86,9 +87,9 @@ public class OutputController {
     return headers.getRange().stream().findFirst().map(range -> {
       val start = range.getRangeStart(contentLength);
       val end = range.getRangeEnd(contentLength);
-      return Pair.of(start, end);
+      return Pair.of(start, min(end, contentLength));
     }).orElseGet(() -> {
-      return Pair.of(0L, contentLength);
+      return Pair.of(0L, bufferSize);
     });
   }
 }
