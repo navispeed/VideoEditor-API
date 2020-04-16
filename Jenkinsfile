@@ -16,7 +16,7 @@ pipeline {
 
     stage('Build') {
       steps {
-        sh 'mvn -Dmaven.test.failure.ignore=true package'
+        sh 'mvn -Dmaven.test.failure.ignore=true clean package'
       }
       post {
         success {
@@ -30,9 +30,11 @@ pipeline {
         sh 'cp target/*.jar docker/.'
         dir('docker') {
           script {
-            def jarfiles = findFiles(glob: '*.jar')
-            def img = docker.build('video-editor', "--build-arg JAR_FILE=${jarfiles[0].name} .")
-            img.push()
+            docker.withRegistry('http://localhost:32000') {
+              def jarfiles = findFiles(glob: '*.jar')
+              def img = docker.build('video-editor', "--build-arg JAR_FILE=${jarfiles[0].name} .")
+              img.push()
+            }
           }
         }
       }
