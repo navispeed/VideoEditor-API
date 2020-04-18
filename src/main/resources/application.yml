@@ -24,9 +24,9 @@ service:
     rate: 5000
     initialDelay: 1000
     ffmpeg:
-      location: /usr/local/bin/ffmpeg
+      location: /usr/bin/ffmpeg
     ffprobe:
-      location: /usr/local/bin/ffprobe
+      location: /usr/bin/ffprobe
   output:
     stream:
       buffer: "2048"
