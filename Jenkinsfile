@@ -40,5 +40,10 @@ pipeline {
         }
       }
     }
+    stage('Deployment') {
+      steps {
+        build('VideoEditor - CD')
+      }
+    }
   }
 }
