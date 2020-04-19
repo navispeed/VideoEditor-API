@@ -34,6 +34,7 @@ pipeline {
               def jarfiles = findFiles(glob: '*.jar')
               def img = docker.build('video-editor', "--build-arg JAR_FILE=${jarfiles[0].name} .")
               img.push()
+              img.push("${env.BRANCH_NAME}-${env.BUILD_NUMBER}".replaceAll("/", "-"))
             }
           }
         }
