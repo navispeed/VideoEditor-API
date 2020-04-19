@@ -65,11 +65,10 @@ public class OutputController {
 
   @SneakyThrows
   public byte[] readByteRange(UrlResource video, HttpHeaders headers) {
-
     Pair<Long, Long> range = resourceRegion(video, headers);
     FileInputStream inputStream = new FileInputStream(video.getFile());
     ByteArrayOutputStream bufferedOutputStream = new ByteArrayOutputStream();
-    byte[] data = new byte[1024];
+    byte[] data = new byte[(int) (range.getRight() - range.getLeft())];
     int nRead;
     while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
       bufferedOutputStream.write(data, 0, nRead);
@@ -88,8 +87,6 @@ public class OutputController {
       val start = range.getRangeStart(contentLength);
       val end = range.getRangeEnd(contentLength);
       return Pair.of(start, min(end, contentLength));
-    }).orElseGet(() -> {
-      return Pair.of(0L, bufferSize);
-    });
+    }).orElseGet(() -> Pair.of(0L, bufferSize));
   }
 }
