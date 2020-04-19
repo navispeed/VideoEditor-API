@@ -76,7 +76,7 @@ public class ExtractionService extends TaskService {
             extractionParameter.getFormat() == Format.VIDEO ?
                 "mp4" :
                 "mp3");
-    String inputFilePath = new File(output.getPath()).listFiles()[0].getAbsolutePath();
+    String inputFilePath = new File(output.getPath()).getAbsolutePath();
     FFmpegOutputBuilder fFmpegOutputBuilder = fFmpeg.builder()
         .setInput(inputFilePath)
         .overrideOutputFiles(true)

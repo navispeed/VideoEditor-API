@@ -82,11 +82,12 @@ public class YoutubeProvider implements VideoProvider {
 
             @Override public void onFinished(File file) {
               LOGGER.info("Download finish for {}", task.getProject().getUrl());
+              File finalOutput = new File(dest + "/output.mp4");
               Output output = Output.builder()
                   .creationDate(LocalDateTime.now())
                   .project(task.getProject())
-                  .path(dest).build();
-              new File(dest).listFiles()[0].renameTo(new File(dest + "/output.mp4"));
+                  .path(finalOutput.getAbsolutePath()).build();
+              new File(dest).listFiles()[0].renameTo(finalOutput);
               outputRepository.save(output);
               taskRepository.save(task.toBuilder().state(Task.State.DONE).output(output).build());
             }

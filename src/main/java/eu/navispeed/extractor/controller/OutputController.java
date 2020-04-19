@@ -74,10 +74,7 @@ public class OutputController {
       bufferedOutputStream.write(data, 0, nRead);
     }
     bufferedOutputStream.flush();
-    byte[] result = new byte[(int) (range.getRight() - range.getLeft())];
-    System.arraycopy(bufferedOutputStream.toByteArray(), range.getLeft().intValue(), result, 0,
-        (int) (range.getRight() - range.getLeft()));
-    return result;
+    return bufferedOutputStream.toByteArray();
   }
 
   @SneakyThrows
