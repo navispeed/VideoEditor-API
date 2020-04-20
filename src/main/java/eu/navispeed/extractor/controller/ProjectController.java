@@ -79,7 +79,6 @@ public class ProjectController {
         .add(create()).add(list()).add(download()).add(get()).add(extract()).add(tasksStatus())).build();
   }
 
-
   @Data
   private static class ProjectForm {
     String url;

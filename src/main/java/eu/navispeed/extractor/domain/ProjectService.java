@@ -45,7 +45,7 @@ public class ProjectService {
     return projectRepository.findById(uuid);
   }
 
-  public List<Task> getTaskStatus(UUID uuid) {
+  public List<TaskRepository.PartialTask> getTaskStatus(UUID uuid) {
     return taskRepository.findTaskStatusByProjectUuid(uuid);
   }
 
