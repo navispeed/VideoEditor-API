@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -42,6 +43,10 @@ public class ProjectService {
 
   public Optional<Project> get(UUID uuid) {
     return projectRepository.findById(uuid);
+  }
+
+  public List<Task> getTaskStatus(UUID uuid) {
+    return taskRepository.findTaskStatusByProjectUuid(uuid);
   }
 
   public Optional<Project> create(String url) {

@@ -69,10 +69,16 @@ public class ProjectController {
             (t, req) -> ServerResponse.badRequest().body(EXTRACTION_TASK_ALREADY_EXIST)).build();
   }
 
+  public RouterFunction<ServerResponse> tasksStatus() {
+    return route().GET("/{id}/tasks",
+        req -> ok().body(service.getTaskStatus(UUID.fromString(req.pathVariable("id"))))).build();
+  }
+
   public RouterFunction<ServerResponse> allRoutes() {
     return route().path("/project", projectUrl -> projectUrl
-        .add(create()).add(list()).add(download()).add(get()).add(extract())).build();
+        .add(create()).add(list()).add(download()).add(get()).add(extract()).add(tasksStatus())).build();
   }
+
 
   @Data
   private static class ProjectForm {

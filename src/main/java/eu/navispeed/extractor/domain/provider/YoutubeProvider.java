@@ -89,7 +89,8 @@ public class YoutubeProvider implements VideoProvider {
                   .path(finalOutput.getAbsolutePath()).build();
               new File(dest).listFiles()[0].renameTo(finalOutput);
               outputRepository.save(output);
-              taskRepository.save(task.toBuilder().state(Task.State.DONE).output(output).build());
+              taskRepository.save(
+                  task.toBuilder().progress(100).state(Task.State.DONE).output(output).build());
             }
 
             @Override public void onError(Throwable throwable) {
