@@ -58,4 +58,9 @@ public class Task {
   @OneToOne(cascade = CascadeType.ALL)
   private DownloadParameter downloadParameter;
 
+  public Task(UUID id, Integer progress, State state) {
+    this.id = id;
+    this.progress = progress;
+    this.state = state;
+  }
 }

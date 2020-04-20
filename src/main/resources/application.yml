@@ -13,6 +13,9 @@ spring:
     hibernate:
       ddl-auto: update
 
+
+  jackson:
+    default-property-inclusion: non_null
 service:
   download:
     rate: 5000
