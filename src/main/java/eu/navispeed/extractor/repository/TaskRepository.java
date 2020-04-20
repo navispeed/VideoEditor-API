@@ -13,7 +13,7 @@ public interface TaskRepository extends CrudRepository<Task, UUID> {
   interface PartialTask {
     UUID getId();
     Task.State getState();
-    long getProgress();
+    Long getProgress();
   }
 
   Optional<Task> findFirstByStateEqualsAndTypeEquals(Task.State state, Task.Type type);
