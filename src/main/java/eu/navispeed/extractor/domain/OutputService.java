@@ -34,6 +34,11 @@ public class OutputService {
   }
 
   @Transactional
+  public Iterable<Output> list() {
+    return outputRepository.findAll();
+  }
+
+  @Transactional
   public List<Output> list(UUID projectId) {
     return outputRepository.findAllByProject_UuidEquals(projectId);
   }

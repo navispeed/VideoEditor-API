@@ -36,6 +36,10 @@ public class OutputController {
     this.bufferSize = Long.parseLong(bufferSize) * 1024;
   }
 
+  public RouterFunction<ServerResponse> listAll() {
+    return route().GET("/", req -> ok().body(service.list())).build();
+  }
+
   public RouterFunction<ServerResponse> list() {
     return route().GET("/", req -> ok().body(service.list(UUID.fromString(req.pathVariable("id")))))
         .build();
@@ -60,7 +64,7 @@ public class OutputController {
   public RouterFunction<ServerResponse> allRoutes() {
     return route().path("/project/{id}/output", projectUrl -> projectUrl.add(list())).path(
         "/output/{id}",
-        outputUrl -> outputUrl.add(get()).add(stream())).build();
+        outputUrl -> outputUrl.add(get()).add(stream())).add(listAll()).build();
   }
 
   @SneakyThrows
