@@ -119,13 +119,14 @@ public class ExtractionService extends TaskService {
     }
 
     try {
-      fFmpegExecutor.createJob(builder/*, progress -> {
-      if (System.currentTimeMillis() / 1000 % 10 != 0) { //Update every 10 second
-        return;
-      }
-      taskRepository.save(
-          task.toBuilder().progress((int) Math.round(progress.out_time_ns / duration_ns)).build());
-    }*/).run();
+      fFmpegExecutor.createJob(builder, progress -> {
+        if (System.currentTimeMillis() / 1000 % 10 != 0) { //Update every 10 second
+          return;
+        }
+        taskRepository.saveAndFlush(
+            task.toBuilder().progress((int) Math.round(progress.out_time_ns / duration_ns))
+                .build());
+      }).run();
 
     } catch (RuntimeException e) {
       onError(task, e.getMessage());
@@ -133,7 +134,8 @@ public class ExtractionService extends TaskService {
     LOGGER.info("Finish conversion of {}", task);
     onChange(task, "", Task.State.DONE);
     outputRepository.save(
-        Output.builder().project(task.getProject()).creationDate(LocalDateTime.now()).path(path).build());
+        Output.builder().project(task.getProject()).creationDate(LocalDateTime.now()).path(path)
+            .build());
   }
 
 }

@@ -34,7 +34,7 @@ public class DownloadService extends TaskService {
       videoProviders.stream()
           .filter(p -> task.getProject().getUrl().getUrl().contains(p.getUrlPattern()))
           .findFirst().ifPresentOrElse(p -> p.download(task), () -> {
-        taskRepository.save(task.toBuilder().state(Task.State.DONE_WITH_ERROR)
+        taskRepository.saveAndFlush(task.toBuilder().state(Task.State.DONE_WITH_ERROR)
             .message("No provider was found for this video").build());
         LOGGER.error("No provider was found for task {}", task);
       });
