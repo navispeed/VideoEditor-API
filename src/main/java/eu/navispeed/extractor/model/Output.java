@@ -38,5 +38,12 @@ public class Output {
   @Getter
   private Boolean isExpired = false;
 
+  @Builder.Default
+  @Getter
+  private boolean isVideo;
+
+  @Builder.Default
+  @Getter
+  private boolean isAudio;
 
 }
